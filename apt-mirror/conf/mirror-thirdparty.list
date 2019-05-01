@@ -1,0 +1,49 @@
+############# config ##################
+#
+# set base_path    /var/spool/apt-mirror
+#
+# set mirror_path  $base_path/mirror
+# set skel_path    $base_path/skel
+# set var_path     $base_path/var
+# set cleanscript $var_path/clean.sh
+# set defaultarch  <running host architecture>
+# set postmirror_script $var_path/postmirror.sh
+# set run_postmirror 0
+#set nthreads     20
+#set _tilde 0
+
+set base_path /var/spool/apt-mirror
+set nthreads 10
+#set limit_rate 100k
+
+############# end config ##############
+
+
+##### 3rd Party Binary Repos
+
+deb https://nginx.org/packages/debian stretch nginx
+
+deb https://deb.nodesource.com/node_9.x stretch main
+
+#Docker CE
+deb https://download.docker.com/linux/debian stretch stable
+
+#Saltstack
+deb http://repo.saltstack.com/apt/debian/9/amd64/latest stretch main
+
+#percona
+deb http://repo.percona.com/apt stretch main
+
+# dotdeb	
+deb http://packages.dotdeb.org jessie all
+
+# sury.org php
+deb https://packages.sury.org/php/ stretch main
+
+#graphana
+deb https://packagecloud.io/grafana/stable/debian/ stretch main
+
+# elasticsearch
+deb https://artifacts.elastic.co/packages/6.x/apt stable main
+deb https://artifacts.elastic.co/packages/5.x/apt stable main
+

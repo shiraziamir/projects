@@ -1,0 +1,6 @@
+test_env:
+  stage: test
+  script:
+    - cd /srv/salt
+    - git pull
+    - salt '*' state.apply

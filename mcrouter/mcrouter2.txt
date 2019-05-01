@@ -1,0 +1,28 @@
+cat <<EOF /etc/systemd/system/mcrouter.service
+[Unit]
+Description=mcrouter $version daemon
+After=network.target
+[Service]
+EnvironmentFile=/usr/local/etc/mcrouter.env
+ExecStart=/usr/local/bin/mcrouter -p \${PORT} --config file:\${CONF} -v \${VERB} --proxy-threads=\${TREADS} \${OPTIONS}
+PrivateTmp=true
+NoNewPrivileges=true
+PrivateDevices=true
+CapabilityBoundingSet=CAP_SETGID CAP_SETUID
+[Install]
+WantedBy=multi-user.target
+EOF
+
+mkdir -p /etc/systemd/system/mcrouter.service.d
+
+cat <<EOF /etc/systemd/system/mcrouter.service.d/override.conf
+[Service]
+LimitNOFILE=203852
+EOF
+
+systemctl daemon-reload
+systemctl enable mcrouter-$version
+
+# Ref: https://pastebin.com/bGzZRXmu
+# Ref: https://lists.gt.net/wiki/mediawiki-cvs/755642?do=post_view_threaded
+
