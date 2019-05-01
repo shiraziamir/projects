@@ -1,0 +1,12 @@
+[Unit]
+Description=Prometheus exporter for MongoDB
+Documentation=Percona Mongodb Exporter
+
+[Service]
+Restart=always
+User=prometheus
+EnvironmentFile=/etc/default/prometheus-mongodb-exporter
+ExecStart=/usr/bin/prometheus-mongodb-exporter $ARGS
+
+[Install]
+WantedBy=multi-user.target

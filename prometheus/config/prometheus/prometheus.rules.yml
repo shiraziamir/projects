@@ -1,0 +1,111 @@
+groups:
+- name: up-down
+  rules:
+  # service availability alert
+  - alert: service_down
+    expr: up == 0
+    labels:
+      service: Platform
+      severity: major
+      #correlate: service_up,service_down
+    annotations:
+      description: Service {{ $labels.instance }} is unavailable.
+      value: DOWN ({{ $value }})
+      runbook: http://wiki.example.com/RunBook/{app}/Event/{alertname}
+
+- name: host
+  rules:
+  - alert: high_cpu_load
+    expr: node_load1 > 10
+    for: 30s
+    labels:
+      severity: warning
+    annotations:
+      summary: "Server under high load"
+      description: "Cpu host is under high load, the avg load 1m is at {{ $value}}. Reported by instance {{ $labels.instance }} of job {{ $labels.job }}."
+
+- name: disk-prod
+  rules:
+  - alert: disk_low
+    expr: node_filesystem_free_bytes{device="/dev/sda1",fstype="ext4",mountpoint="/"}/(1024*1024*1024) <= 100
+    labels:
+      service: Platform
+      severity: minor
+    annotations:
+      description: "Disk ({{ $value }}) {{ $labels.instance }} is lower than 100G"
+
+
+- name: disk-prod-predict
+  rules:
+  - alert: disk_will_be_full
+    expr: predict_linear( node_filesystem_free_bytes{device="/dev/sda1",fstype="ext4",mountpoint="/"}[2h], 8 * 3600) < 100000
+    for: 5m
+    labels:
+      service: Platform
+      severity: major
+    annotations:
+      description: "Disk ({{ $value }}) {{ $labels.instance }} is lower than 100G"
+
+- name: haproxy
+  rules:
+  - alert: haproxy_down
+    expr: haproxy_up == 0
+    labels:
+      service: Platform
+      severity: major
+    annotations:
+      summary: "{{ $labels.instance }} is DOWN"
+
+- name: redis
+  rules:
+  - alert: redis_down
+    expr: redis_up == 0
+    labels:
+      service: Platform
+      severity: MAJOR
+      #correlate: service_up,service_down
+    annotations:
+      description: "{{ $labels.instance }} is DOWN" 
+
+
+- name: nginx
+  rules:
+  - alert: nginx_down
+    expr: nginx_up == 0
+    labels:
+      service: Web-Server
+      severity: MAJOR
+    annotations:
+      description: "{{ $labels.instance }} is DOWN"
+
+- name: nginx-conn
+  rules:
+  - alert: high-nginx-conn
+    expr: nginx_connections_active > 100
+    labels:
+      service: Web-Load
+      severity: MAJOR
+    annotations:
+      description: "{{ $value }} connections on Nginx  {{ $labels.instance }} is HIGH (>100)"
+
+- name: test.net-ssl
+  rules:
+  - alert: test.net-ssl-expiry
+    expr: probe_ssl_earliest_cert_expiry{instance="https://test.net",job="blackbox"} - time() < 2592000
+    labels:
+      service: Web-SSL
+      severity: MAJOR
+    annotations:
+      description: "vesitin.ir ssl will expire in one month!    {{ $value }} sec left."
+
+
+- name: mongodb-man-down
+  rules:
+  - alert: mongodb-member-down
+    expr: mongodb_replset_member_health == 0
+    labels:
+      service: Mongo
+      severity: MAJOR
+    annotations:
+      description: "Mongo member down    {{ $value }} $labels.instance"
+

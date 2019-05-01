@@ -1,0 +1,3 @@
+ARGS='-mongodb.uri="mongodb://mongodb_exporter:xxs3crx3t3@localhost"' 
+
+

@@ -1,0 +1,26 @@
+ALERT service_down
+ IF up == 0
+ FOR 1m
+ ANNOTATIONS {
+  summary = "Instance {{$labels.instance}} down",
+  description = "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 5 minutes."
+ }
+ALERT memory_error
+ IF (((node_memory_MemFree/node_memory_MemTotal)*100) < 30)
+ FOR 1m
+ ANNOTATIONS {
+  summary = "Instance {{$labels.instance}} memory over consume",
+  description = "{{ $labels.instance }} of job {{ $labels.job }} has overflowing ram for 5 minutes."
+ }
+ALERT disk_out_of_space
+ IF ((min by (instance,job)(node_filesystem_free{device!="rootfs"} / node_filesystem_size{device!="rootfs"}) * 100) < 30)
+ ANNOTATIONS {
+  summary = "Instance {{$labels.instance}} HDD out of space",
+  description = "{{ $labels.instance }} of job {{ $labels.job }} hdd is running out"
+ }
+ALERT system_load_jump
+ IF ((node_load1)/ count(node_cpu{mode="user"}))  > 0.8
+ ANNOTATIONS {
+ summary = "Instance {{$labels.instance}} load is too high!",
+ description = "Instance {{$labels.instance}} of job {{$labels.job}} load is too high!"
+ }

@@ -1,0 +1,15 @@
+# stop nginx on lb2
+
+# certbot --nginx -d ...
+
+# cat /etc/letsencrypt/live/rt.ir/pfx.sh 
+#!/bin/bash
+
+PFX_FILE=""
+
+cd /etc/letsencrypt/live/<domain>
+
+
+openssl pkcs12 -export -out $PFX_FILE -inkey privkey.pem -in cert.pem -certfile chain.pem
+
+# openssl pkcs12 -export -out b_domains.pfx -inkey privkey.pem -in cert.pem -certfile chain.pem

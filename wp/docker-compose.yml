@@ -1,0 +1,53 @@
+version: '2'
+services:
+   db:
+     image: mariadb:10
+     container_name: mariadb
+     volumes:
+       - ./db_data:/var/lib/mysql
+       - ./mariadb/my.cnf:/etc/mysql/conf.d/settings.cnf
+       - ./mariadb/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+     restart: on-failure:3
+     environment:
+       MYSQL_ROOT_PASSWORD: wordpress
+       MYSQL_DATABASE: wordpress
+       MYSQL_USER: wordpress
+       MYSQL_PASSWORD: wordpress
+   wordpress:
+     depends_on:
+       - db
+     build: .
+     ports:
+       - "9090:9000"
+     volumes:
+       - wordpress:/var/www/html
+     restart: on-failure:10
+     environment:
+       WORDPRESS_DB_HOST: db:3306
+       WORDPRESS_DB_PASSWORD: wordpress
+   nginx:
+    image: nginx:latest
+    ports:
+        - '8080:80'
+    volumes:
+        - ./nginx:/etc/nginx/conf.d
+        - ./logs/nginx:/var/log/nginx
+        - wordpress:/var/www/html
+    links:
+        - wordpress
+    restart: always    
+   phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    ports:
+        - "10000:80"
+    environment:
+        - PMA_HOST=db
+    restart: always
+    depends_on:
+        - db
+    links:
+        - db
+volumes:
+    wordpress:
+

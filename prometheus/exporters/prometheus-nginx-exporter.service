@@ -1,0 +1,19 @@
+[Unit]
+Description=Nginx Prometheus Exporter
+Documentation=https://github.com/nginxinc/nginx-prometheus-exporter
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=prometheus
+Group=prometheus
+ExecReload=/bin/kill -HUP $MAINPID
+ExecStart=/usr/bin/prometheus-nginx-exporter 
+
+SyslogIdentifier=nginx_exporter
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+

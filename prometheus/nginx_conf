@@ -1,0 +1,52 @@
+server {
+	listen 80 ;
+	listen [::]:80 ;
+	root /var/www/xproject;
+
+	index index.html index.htm index.nginx-debian.html;
+    server_name tin.ir; # managed by Certbot
+
+	
+        location / {
+                # First attempt to serve request as file, then
+                # as directory, then fall back to displaying a 404.
+                try_files $uri $uri/index.html;
+        }
+	
+ 	location /grafana/ {
+                #auth_basic "Authentication Required";
+                #auth_basic_user_file /etc/nginx/htpasswd;
+		proxy_pass http://localhost:3000/;
+        }
+
+ 	location /prom/ {
+                #auth_basic "Authentication Required";
+                #auth_basic_user_file /etc/nginx/htpasswd;
+
+                allow 172.16.0.0/16;
+                allow 127.0.0.1;
+                allow 172.16.95.19;
+                deny all;
+		proxy_pass http://localhost:9090/prom/;
+        }
+
+ 	location /graylog/ {
+             allow 172.16.0.0/16;
+             deny all;
+             proxy_set_header    Host $http_host;
+             proxy_set_header    X-Forwarded-Host $host;
+             proxy_set_header    X-Forwarded-Server $host;
+             proxy_set_header    X-Forwarded-For $proxy_add_x_forwarded_for;
+             proxy_set_header    X-Graylog-Server-URL http://172.16.95.20/graylog/api;
+             proxy_pass          http://localhost:9000;
+        }
+}
+server {
+    listen 8080;
+    location /stub_status {
+      stub_status on;
+      access_log  off;
+      allow       127.0.0.1;
+      deny        all;
+    }
+}

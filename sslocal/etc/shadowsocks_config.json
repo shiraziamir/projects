@@ -1,0 +1,11 @@
+{
+    "server":"5.2.4.1",
+    "server_port":1984,
+    "local_address": "0.0.0.0",
+    "local_port":1081,
+    "password":"Luxxxxembourg",
+    "timeout":300,
+    "method":"aes-256-cfb",
+    "fast_open": true,
+    "workers": 1
+}

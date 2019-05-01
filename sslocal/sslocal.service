@@ -1,0 +1,13 @@
+[Unit]
+Description=Daemon to start Shadowsocks Client
+Wants=network-online.target
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/sslocal -c /etc/shadowsocks_config.json
+
+[Install]
+WantedBy=multi-user.target
+
+#/usr/bin/python /usr/bin/sslocal -c /etc/shadowsocks_config.json -d start

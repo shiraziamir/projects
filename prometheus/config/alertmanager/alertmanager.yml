@@ -1,0 +1,20 @@
+route:
+ receiver: 'team-pager'
+ group_by: ['alertname']
+ group_wait:      30s
+ group_interval:  5m
+ repeat_interval: 1h
+receivers:
+ - name: 'slack'
+   slack_configs:
+    - send_resolved: true
+      channel: '#alerts'
+      api_url: 'https://hooks.slack.com/services/maskedmas/kedmasked/-----masssssked!--------'
+      text: '<!channel> {{.CommonAnnotations.description}}'
+
+ - name: 'team-pager'
+   opsgenie_configs:
+    - api_key: '00000000-8a14-4275-ae85-000000000000'
+      teams: 'team1'
+
+

@@ -1,0 +1,19 @@
+[Unit]
+Description=Prometheus exporter haproxy
+Documentation=https://github.com/prometheus/haproxy_exporter
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=prometheus
+Group=prometheus
+ExecReload=/bin/kill -HUP $MAINPID
+ExecStart=/usr/bin/prometheus-haproxy-exporter \
+  --haproxy.scrape-uri="http://t:t@127.0.0.1:8585/api/v1/stats?stats;csv"
+SyslogIdentifier=haproxy_exporter
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+

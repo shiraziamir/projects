@@ -1,0 +1,10 @@
+version: '2'
+services:
+  ss1:
+    image: oddrationale/docker-shadowsocks
+    restart: always
+    ports:
+      - "1984:1984"
+    command: -s 0.0.0.0 -p 1984 -k Luxxxxembourg -m aes-256-cfb 
+
+
