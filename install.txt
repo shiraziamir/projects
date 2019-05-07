@@ -1,0 +1,2 @@
+minishift config set vm-driver virtualbox
+
