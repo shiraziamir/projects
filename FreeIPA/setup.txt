@@ -1,0 +1,27 @@
+# centos 7
+yum install screen tmux vim git python-pip 
+yum remove ansible # old version
+
+yum install epel-release
+yum install ansible # vers should be > 2.5
+yum update
+
+cd /opt
+git clone https://github.com/freeipa/ansible-freeipa.git
+
+# cat inventory/hosts.server 
+[ipaserver]
+ipaserver. 
+
+
+[ipaserver:vars]
+ipaadmin_password=Adminassword1
+ipadm_password=Adminpassword1
+ipaserver_domain=
+ipaserver_realm=MOFID.LOCAL
+ipaserver_setup_dns=yes
+ipaserver_auto_forwarders=yes
+ipaserver_setup_firewalld=no
+ipaclient_no_ntp= no
+
+yum install ipa-python pip-python

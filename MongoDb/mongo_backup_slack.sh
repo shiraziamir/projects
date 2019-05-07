@@ -6,7 +6,7 @@ APP_SLACK_ICON_EMOJI=':thumbsdown:'
 START=$(date +%s);
 
 
-sudo mongodump --oplog --gzip  --out $DEST --authenticationDatabase admin --username admin --password "123" && STATUS="OK" && APP_SLACK_ICON_EMOJI=':thumbsup:'
+sudo mongodump --oplog --gzip  --out $DEST --authenticationDatabase admin --username admin --password "123" && STATUS="OK" && APP_SLACK_ICON_EMOJI=':ok:'
 
 END=$(date +%s);
 DURATION=`echo $((END-START)) | awk '{print int($1/60)":"int($1%60)}'`

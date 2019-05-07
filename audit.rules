@@ -1,0 +1,69 @@
+## First rule - delete all
+-D
+
+## Increase the buffers to survive stress events.
+## Make this bigger for busy systems
+-b 8192
+
+## This determine how long to wait in burst of events
+--backlog_wait_time 0
+
+## Set failure mode to syslog
+-f 1
+
+# Record Events that Modify User/Group Information
+# audit_account_changes
+-w /etc/shadow -p wa -k audit_account_changes
+
+
+
+#Record Attempts to Alter Logon and Logout Events
+-w /var/log/faillog -p wa -k logins
+-w /var/log/lastlog -p wa -k logins
+
+#Record Attempts to Alter Process and Session Initiation Information
+-w /var/run/utmp -p wa -k session
+-w /var/log/btmp -p wa -k session
+-w /var/log/wtmp -p wa -k session
+
+
+#Ensure auditd Collects System Administrator Actions
+-w /etc/sudoers -p wa -k actions
+
+#Ensure auditd Collects Information on Kernel Module Loading and Unloading
+-w /sbin/insmod -p x -k modules
+-w /sbin/rmmod -p x -k modules
+-w /sbin/modprobe -p x -k modules
+-a always,exit -F arch=b64 -S init_module -S delete_module -k modules
+
+## Power state
+-w /sbin/shutdown -p x -k power
+-w /sbin/poweroff -p x -k power
+-w /sbin/reboot -p x -k power
+-w /sbin/halt -p x -k power
+
+## Suspicious activity
+-w /usr/bin/wget -p x -k susp_activity
+-w /usr/bin/curl -p x -k susp_activity
+-w /usr/bin/base64 -p x -k susp_activity
+-w /bin/nc -p x -k susp_activity
+-w /bin/netcat -p x -k susp_activity
+-w /usr/bin/ncat -p x -k susp_activity
+-w /usr/bin/ssh -p x -k susp_activity
+-w /usr/bin/socat -p x -k susp_activity
+-w /usr/bin/wireshark -p x -k susp_activity
+-w /usr/bin/rawshark -p x -k susp_activity
+-w /usr/bin/rdesktop -p x -k sbin_susp
+
+## Sbin suspicious activity
+-w /sbin/iptables -p x -k sbin_susp
+-w /sbin/ifconfig -p x -k sbin_susp
+-w /usr/sbin/tcpdump -p x -k sbin_susp
+-w /usr/sbin/traceroute -p x -k sbin_susp
+
+# DPKG / APT-GET (Debian/Ubuntu)
+-w /usr/bin/dpkg -p x -k software_mgmt
+-w /usr/bin/apt-add-repository -p x -k software_mgmt
+-w /usr/bin/apt-get -p x -k software_mgmt
+-w /usr/bin/aptitude -p x -k software_mgmt
+
