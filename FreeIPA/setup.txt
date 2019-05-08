@@ -11,7 +11,9 @@ yum remove ansible # old version
 
 yum install epel-release
 yum install ansible # vers should be > 2.5
-yum update
+yum update --upgrade pip
+pip install 
+pip install python-gssapi
 
 cd /opt
 git clone https://github.com/freeipa/ansible-freeipa.git
