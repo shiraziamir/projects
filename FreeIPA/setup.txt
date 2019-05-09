@@ -1,3 +1,6 @@
+## fix ./roles/ipaclient/tasks/install.yml (lenth -> length)
+
+
 # cat /etc/hosts
 10.10.10.10 ipaserver.test.local
 
@@ -60,4 +63,7 @@ ipaclient_allow_repair=yes
 
 # ipa dnsrecord-add 2.1.0.192.in-addr.arpa 4 --ptr-rec server2.example.com.
 # ipa user-add amir --first=Amir --last=Shirazi  --email=ashirazi@baazar.io --homedir=/home/amir --password
+
+# https://computingforgeeks.com/how-to-configure-freeipa-replication-on-ubuntu-centos/
+# https://www.freeipa.org/page/V4/Replica_Setup
 
