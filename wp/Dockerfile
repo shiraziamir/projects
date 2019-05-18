@@ -52,24 +52,24 @@ RUN { \
 		echo 'html_errors = Off'; \
 	} > /usr/local/etc/php/conf.d/error-logging.ini
 
-VOLUME /var/www/html/blog
+VOLUME /var/www/html
 
-ENV WORDPRESS_VERSION 5.1-fa_IR
-ENV WORDPRESS_SHA1 7922d722ff57546eb73a29d9592119cb187f245b
-# http://fa.wordpress.org/wordpress-5.1-fa_IR.tar.gz
+ENV WORDPRESS_VERSION 5.2-fa_IR
+ENV WORDPRESS_SHA1 e5bf32c634066df4cacdb66bd1f42f15b16488ad
+# http://fa.wordpress.org/wordpress-5.2-fa_IR.tar.gz
 
 RUN set -ex;\
 	curl -o wordpress.tar.gz -fSL "http://fa.wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz"; \
+        sha1sum wordpress.tar.gz; \
         echo "$WORDPRESS_SHA1 *wordpress.tar.gz" | sha1sum -c -; \
         # upstream tarballs include ./wordpress/ so this gives us /usr/src/wordpress
 	tar -xzf wordpress.tar.gz -C /usr/src/; \
 	rm wordpress.tar.gz; \
 	chown -R www-data:www-data /usr/src/wordpress; \
         ls -l ;
-	#chown -R www-data:www-data /usr/src/blog/wordpress 
 
 RUN set -ex;\
-        sed -i.orig '/^<?php/a  define("WP_HOME","/blog/"); \n define("WP_SITEURL","/blog/"); \n $_SERVER["REQUEST_URI"] = str_replace("/wp-admin/", "/blog/wp-admin/",  $_SERVER["REQUEST_URI"]);' /usr/src/wordpress/wp-config-sample.php; 
+        sed -i.orig '/^<?php/a  define("WP_HOME","/blog/"); \n define("WP_SITEURL","/blog/"); \n $_SERVER["REQUEST_URI"] = str_replace("/wp-admin/", "/blog/wp-admin/",  $_SERVER["REQUEST_URI"]); \n @ini_set( "upload_max_size" , "100M" );\n @ini_set( "post_max_size", "25M");\n @ini_set( "memory_limit", "100M" );' /usr/src/wordpress/wp-config-sample.php; 
 
 
 COPY docker-entrypoint.sh /usr/local/bin/

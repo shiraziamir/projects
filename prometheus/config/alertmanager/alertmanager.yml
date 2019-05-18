@@ -1,3 +1,6 @@
+global:
+  opsgenie_api_key: "xxxxxxx"
+  opsgenie_api_url: "https://api.eu.opsgenie.com/"
 route:
  receiver: 'team-pager'
  group_by: ['alertname']
