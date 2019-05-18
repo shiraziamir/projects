@@ -1,27 +1,69 @@
+## fix ./roles/ipaclient/tasks/install.yml (lenth -> length)
+
+
+# cat /etc/hosts
+10.10.10.10 ipaserver.test.local
+
+# make sure ipv6 is not disabled
+# make sure setenforce 0 
+# disable NetworkManager
+
 # centos 7
 yum install screen tmux vim git python-pip 
 yum remove ansible # old version
 
-yum install epel-release
-yum install ansible # vers should be > 2.5
-yum update
+# on ansible machine:
+  yum install epel-release
+  yum install ansible # vers should be > 2.5
+  yum update --upgrade pip
+  pip install 
+  pip install python-gssapi
 
 cd /opt
 git clone https://github.com/freeipa/ansible-freeipa.git
 
-# cat inventory/hosts.server 
-[ipaserver]
-ipaserver. 
+ansible-playbook -c local -vvv -i inventory/hosts install-server.yml
 
+cat inventory/hosts
+[ipaclients]
+ipaclient1.test.local
+
+[ipaserver]
+ipaserver.test.local
 
 [ipaserver:vars]
-ipaadmin_password=Adminassword1
-ipadm_password=Adminpassword1
-ipaserver_domain=
-ipaserver_realm=MOFID.LOCAL
-ipaserver_setup_dns=yes
-ipaserver_auto_forwarders=yes
-ipaserver_setup_firewalld=no
-ipaclient_no_ntp= no
+ipaserver_domain=test.local
+ipaserver_realm=TEST.LOCAL
+ipaadmin_principal=admin
+ipaadmin_password=MyAdminPassword123456
+ipadm_password=MyDmPassword123456
+ipaserver_setup_dns=no
+ipaserver_auto_forwarders=no
+#ipaclient_keytab=/tmp/krb5.keytab
+#ipaclient_use_otp=yes
+#ipaclient_kinit_attempts=3
+#ipaclient_mkhomedir=yes
 
-yum install ipa-python pip-python
+ipaclient_force_join=yes
+
+ipaclient_allow_repair=yes
+#########################################
+
+
+# Adding replica
+# ipa dnsrecord-add lan.baazar.io ipa2 --a-rec 192.168.10.84
+# /etc/resolve.conf
+# ipa-replica-manage list
+# first apply client.yml then replica.yml
+
+# ipa host-find
+#  ipa hostgroup-add-member ipaservers --hosts ipa2.lan.baazar.io
+# ipa dnsrecord-add server.example.com _ldap._tcp --srv-rec="0 100 389 server1.example.com" 
+# priority wheit port
+
+# ipa dnsrecord-add 2.1.0.192.in-addr.arpa 4 --ptr-rec server2.example.com.
+# ipa user-add amir --first=Amir --last=Shirazi  --email=ashirazi@baazar.io --homedir=/home/amir --password
+
+# https://computingforgeeks.com/how-to-configure-freeipa-replication-on-ubuntu-centos/
+# https://www.freeipa.org/page/V4/Replica_Setup
+
