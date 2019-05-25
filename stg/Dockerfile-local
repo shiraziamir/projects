@@ -1,0 +1,32 @@
+FROM ubuntu:18.04
+
+MAINTAINER Mofid Team
+ENV NODE_ENV=staging
+
+WORKDIR /opt/git/production/live/x-project-backend.git
+
+RUN useradd -ms /bin/bash -u 1001 mofid && \ 
+    apt-get update && \
+    apt-get -y  install sudo curl git telnet iputils-ping net-tools vim && \
+    curl -sL https://deb.nodesource.com/setup_8.x |  bash - && \
+    apt-get install --yes nodejs && \
+    rm -rf /var/lib/apt/lists/* && \
+    npm install -g pm2 babel-cli babel-register babel-preset-env babel-preset-stage-2 babel-core babel-polyfill && \
+    mkdir -p /opt/git/production/live/x-project-backend.git && \
+    chown -R mofid: /opt && \
+    echo "mofid ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/mofid && \
+    chmod 0440 /etc/sudoers.d/mofid 
+
+
+# Define working directory
+
+USER mofid
+#ADD . /opt/git/production/live/x-project-backend.git
+
+#RUN sudo chown -R mofid: . && npm install
+
+#COPY docker-entrypoint.sh /
+#ENTRYPOINT ["/docker-entrypoint.sh"]
+
+# Run app
+CMD pm2 start --no-daemon ecosystem.config.js --env $NODE_ENV

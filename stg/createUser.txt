@@ -1,0 +1,15 @@
+    db.createUser(
+      {
+        user: "md",
+        pwd: ""FtvqK,
+        roles: [ { role: "userAdminAnyDatabase", db: "admin" } ]
+      }
+    )
+
+    db.createUser(
+      {
+        user: "xp",
+        pwd: "FKtvq",
+        roles: [ { role: "readWrite", db: "staging" }, { role: "readWrite", db: "staging_agenda" } ]
+      }
+    )
