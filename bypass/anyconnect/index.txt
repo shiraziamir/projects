@@ -1,3 +1,4 @@
 http://www.socsci.uci.edu/~jstern/uci_vpn_ubuntu/
 http://www.isthe.com/for-you-only/anyconnect/
 
+sudo apt install libcanberra-gtk-module libcanberra-gtk3-module
