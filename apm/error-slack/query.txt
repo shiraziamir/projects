@@ -1,0 +1,15 @@
+{
+  "bool": {
+    "must": [
+      {
+        "range": {
+          "@timestamp": {
+            "gte": "now-30m",
+            "lt": "now"
+          }
+        }
+      }
+    ]
+  }
+}
+
