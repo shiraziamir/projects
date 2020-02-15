@@ -13,3 +13,4 @@
   }
 }
 
+note: now - Tm needs to be reflected in cron to be run every T min.
