@@ -1,0 +1,57 @@
+{
+  "_source": [
+    "url.path",
+    "transaction.duration",
+    "@timestamp",
+    "http.request.headers.X-Real-Ip"
+  ],
+  "size": @result_size,
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "regexp": {
+            "url.path": "@url"
+          }
+        },
+        {
+          "range": {
+            "transaction.duration.us": {
+              "gte": @duration
+            }
+          }
+        },
+        {
+          "range": {
+            "@timestamp": {
+              "gte": "now-@latest_time",
+              "lt": "now"
+            }
+          }
+        },
+        {
+          "match": {
+            "http.request.method": {
+              "query": "@method"
+            }
+          }
+        },
+        {
+          "match": {
+            "service.name": {
+              "query": "apm_prod"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "aggs" : {
+        "max_duration" : {
+          "max" : { "field" : "transaction.duration.us" }
+          },
+        "min_duration": {
+          "min" : { "field" : "transaction.duration.us" }
+        }
+    }
+}
