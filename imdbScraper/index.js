@@ -1,8 +1,10 @@
 //const request = require("request-promise");
 const request = require("requestretry").defaults({ fullResponse: false });
+const regualrRequest = require("request");
 const cheerio = require("cheerio");
 const Nightmare = require("nightmare");
 const nightmare = Nightmare({ show: true });
+const fs = require("fs");
 
 async function scrapeTitlesRankAndRatings() {
   const result = await request.get("https://www.imdb.com/chart/moviemeter/?ref_=nv_mv_mpm");
@@ -29,7 +31,6 @@ async function scrapeTitlesRankAndRatings() {
 async function scrapePosterUrl(movies) {
   return await Promise.all(
     movies.map(async (movie, i) => {
-
       try {
         const html = await request.get(movie.descriptionUrl);
         const $ = await cheerio.load(html);
@@ -54,7 +55,8 @@ async function scrapePosterImageUrl(movies) {
           ).attr("src")
         );
       movies[i].posterImageUrl = posterImageUrl;
-      console.log(movies[i])
+      console.log(movies[i]);
+      savePosterImageToDisk(movies[i])
     } catch (err) {
       console.error(err)
     }
@@ -62,6 +64,11 @@ async function scrapePosterImageUrl(movies) {
   return movies;
 }
 
+async function savePosterImageToDisk(movie) {
+  regualrRequest
+   .get(move.posterImageUrl)
+   .pipe(fs.createWriteStream(`posters/${movie.rank}.png`));
+}
 async function main() {
   console.log('scraping part 1')
   let movies = await scrapeTitlesRankAndRatings();
