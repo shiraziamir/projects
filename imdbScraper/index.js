@@ -45,25 +45,29 @@ async function scrapePosterUrl(movies) {
 async function scrapePosterImageUrl(movies) {
   for (var i = 0; i < movies.length; i++) {
     try {
+      console.log(i)
       const posterImageUrl = await nightmare
         .goto(movies[i].posterUrl)
-        .evaluate(() => 
-            $(
-             "#photo-container > div > div:nth-child(3) > div > div.pswp__scroll-wrap > div.pswp__container > div:nth-child(2) > div > img:nth-child(2)"
-             ).attr("src")
+        .evaluate(() =>
+          $(
+            "#photo-container > div > div:nth-child(3) > div > div.pswp__scroll-wrap > div.pswp__container > div:nth-child(2) > div > img:nth-child(2)"
+          ).attr("src")
         );
       movies[i].posterImageUrl = posterImageUrl;
       console.log(movies[i])
     } catch (err) {
       console.error(err)
     }
-    return movies;
   }
+  return movies;
 }
 
 async function main() {
+  console.log('scraping part 1')
   let movies = await scrapeTitlesRankAndRatings();
+  console.log('scraping part 2')
   movies = await scrapePosterUrl(movies);
+  console.log('scraping part 3')
   movies = await scrapePosterImageUrl(movies);
   //console.log(movies)
 }
