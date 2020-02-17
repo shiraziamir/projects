@@ -1,0 +1,149 @@
+version: '3.7'
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.0.0
+    container_name: elasticsearch1
+    cap_add:
+      - ALL
+    environment:
+      - node.name=elasticsearch1
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512M -Xmx512M"
+      - http.cors.enabled=true
+      - http.cors.allow-origin=*
+      - discovery.type=single-node
+    volumes:
+      - type: volume
+        source: logs
+        target: /var/log
+      - type: volume
+        source: esdata1
+        target: /usr/share/elasticsearch/data
+    networks:
+      - elastic
+      - ingress
+    ports:
+      - 9200:9200
+      - 9300:9300
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.0.0
+    container_name: kibana
+    cap_add:
+      - ALL
+    environment:
+      SERVER_NAME: localhost
+      ELASTICSEARCH_URL: http://elasticsearch1:9200/
+    ports:
+      - 5601:5601
+    volumes:
+      - type: volume
+        source: logs
+        target: /var/log
+    networks:
+      - elastic
+      - ingress
+  auditbeat:
+    image: docker.elastic.co/beats/auditbeat:7.0.0
+    command: auditbeat -e -strict.perms=false
+    user: root
+    environment:
+      - setup.kibana.host=kibana:5601
+      - output.elasticsearch.hosts=["elasticsearch:9200"]
+    cap_add: ['AUDIT_CONTROL', 'AUDIT_READ']
+    pid: "host"
+    volumes:
+    #   - ${PWD}/configs/auditbeat.docker.yml:/usr/share/auditbeat/auditbeat.yml
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - elastic
+  metricbeat:
+    image: docker.elastic.co/beats/metricbeat:7.0.0
+    #command: --strict.perms=false
+    environment:
+      - setup.kibana.host=kibana:5601
+      - output.elasticsearch.hosts=["elasticsearch:9200"]
+    cap_add:
+      - AUDIT_CONTROL
+      - AUDIT_READ
+    volumes:
+      # - ${PWD}/configs/metricbeat.docker.yml:/usr/share/metricbeat/metricbeat.yml
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
+      - /proc:/hostfs/proc:ro
+      - /:/hostfs:ro
+    networks:
+      - elastic
+
+  heartbeat:
+    image: docker.elastic.co/beats/heartbeat:7.0.0
+    command: --strict.perms=false
+    environment:
+      - setup.kibana.host=kibana:5601
+      - output.elasticsearch.hosts=["elasticsearch:9200"]
+    # volumes:
+    #   - ${PWD}/configs/heartbeat.docker.yml:/usr/share/heartbeat/heartbeat.yml
+    networks:
+      - elastic
+
+  packetbeat:
+    image: docker.elastic.co/beats/packetbeat:7.0.0
+    command: --strict.perms=false
+    environment:
+      - setup.kibana.host=kibana:5601
+      - output.elasticsearch.hosts=["elasticsearch:9200"]
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
+    # volumes:
+    #   - ${PWD}/configs/packetbeat.docker.yml:/usr/share/packetbeat/packetbeat.yml
+    networks:
+      - elastic
+
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:7.0.0
+    command: --strict.perms=false
+    environment:
+      - setup.kibana.host=kibana:5601
+      - output.elasticsearch.hosts=["elasticsearch:9200"]
+    ports:
+      - 9000:9000
+    volumes:
+      # - ${PWD}/configs/filebeat.docker.yml:/usr/share/filebeat/filebeat.yml
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - elastic
+  apmserver:
+    image: docker.elastic.co/apm/apm-server:7.0.0
+    command: --strict.perms=false
+    ports:
+      - 8200:8200
+      - 8201:8200
+    environment:
+      - apm-server.host=0.0.0.0
+      - setup.kibana.host=kibana:5601
+      - output.elasticsearch.hosts=["elasticsearch:9200"]
+    # volumes:
+    #   - ${PWD}/configs/apm-server.yml:/usr/share/apm-server/apm-server.yml
+    networks:
+        - elastic
+  nginx:
+    image: nginx:latest
+    ports:
+        - 80:80
+    volumes:
+        - ${PWD}/nginx-config/:/etc/nginx/conf.d/
+    command: /bin/bash -c "nginx -g 'daemon off;'"
+    ulimits:
+      nproc: 65535
+    networks:
+      - ingress
+volumes:
+  esdata1:
+  esdata2:
+  esdata3:
+  logs:
+
+networks:
+  elastic:
+  ingress:
