@@ -66,9 +66,10 @@ async function scrapePosterImageUrl(movies) {
 
 async function savePosterImageToDisk(movie) {
   regualrRequest
-   .get(move.posterImageUrl)
+   .get(movie.posterImageUrl)
    .pipe(fs.createWriteStream(`posters/${movie.rank}.png`));
 }
+
 async function main() {
   console.log('scraping part 1')
   let movies = await scrapeTitlesRankAndRatings();
