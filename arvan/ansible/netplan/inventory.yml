@@ -1,0 +1,10 @@
+
+[nodes]
+192.168.200.170
+192.168.200.83
+192.168.200.117
+192.168.200.190
+192.168.200.49
+
+[nodes:vars]
+ansible_ssh_common_args='-o StrictHostKeyChecking=no -o ProxyCommand="ssh -p 22 -W %h:%p -q ubuntu@188.121.111.65"'

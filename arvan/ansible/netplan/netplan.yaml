@@ -1,0 +1,24 @@
+---
+- name: example play
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: tell us which host we are on
+      debug: 
+        msg: "{{ ansible_eth0.ipv4.address }} {{ ansible_eth0.macaddress  }} "
+
+    - name: Updating Network Configuration 0
+      copy: src=templates/99-disable-network-config.cfg  dest=/etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
+
+    - name: Updating Network Configuration 1
+      template: src=templates/netplan.yml dest=/etc/netplan/50-cloud-init.yaml
+
+    - name: Delete content & directory
+      file: name=/etc/netplan/10-cloud-init.yaml state=absent
+      notify: Apply netplan
+
+  handlers:
+    - name: Apply netplan
+      command: sudo netplan apply
+      async: 45
+      poll: 0
