@@ -1,0 +1,68 @@
+version: '3.4'
+
+services:
+  php-blue:
+    image: reg.example.com/backend-php:prod
+    networks:
+      - backend
+      - traefik-public
+      - crawler_crawler-fronted
+      - elastic
+    volumes:
+        - backend-media.vol:/app/media
+        - backend-report.vol:/app/var/report
+        # - backend-sessions.vol:/tmp/magento/var/session/
+    environment:
+      - ELASTIC_APM_SERVER_URL=http://apm-server:8200
+      - ELASTIC_APM_SERVICE_NAME=php
+      - ELASTIC_APM_SECRET_TOKEN=${APM_TOKEN}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_BACK_CACHE_DB=${REDIS_BACK_CACHE_DB}
+    sysctls:
+      net.core.somaxconn: 1024
+      
+    deploy:
+      resources:
+        limits:
+          cpus: '8.0'
+          memory: 8192M
+      placement:
+        constraints:
+          - node.id == p3bkysciugtkv5netrp98h
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.backend-nginx-blue.rule=Host(`example.com`)"
+        - "traefik.http.routers.backend-nginx-blue.entrypoints=websecure"
+        - "traefik.http.routers.backend-nginx-blue.tls.certresolver=letsencryptresolver"
+        - "traefik.http.services.backend-nginx-blue.loadbalancer.server.port=80"
+        - "traefik.http.routers.backend-nginx-blue.priority=0"
+        - "traefik.http.routers.backend-nginx-blue.service=backend-nginx-blue"
+        # redirect www to non www
+        - "traefik.http.routers.dummy-blue-svc2.rule=host(`www.example.com`)"
+        - "traefik.http.routers.dummy-blue-svc2.entrypoints=websecure"
+        - "traefik.http.routers.dummy-blue-svc2.tls.certresolver=letsencryptresolver"
+        - "traefik.http.routers.dummy-blue-svc2.service=dummy-blue-svc2"
+        - "traefik.http.services.dummy-blue-svc2.loadbalancer.server.port=999991"
+        #
+        - "traefik.http.routers.dummy-blue-svc2.middlewares=www_to_example_com"
+        - "traefik.http.middlewares.www_to_example_com.redirectregex.regex=^https?://www.example.com/(.*)"
+        - "traefik.http.middlewares.www_to_example_com.redirectregex.replacement=https://example.com/$$1"
+        - "traefik.http.middlewares.www_to_example_com.redirectregex.permanent=true"
+
+
+networks:
+  backend:
+  crawler_crawler-fronted:
+    external: true
+  elastic:
+    external: true
+  traefik-public:
+    external: true
+
+volumes:
+  backend-media.vol:
+  backend-report.vol:
+  backend-sessions.vol:
+

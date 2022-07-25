@@ -1,0 +1,16 @@
+build:
+  stage: build
+  script:
+    - export DEBUG=0
+    - envsubst < app/etc/local.xml.example > app/etc/local.xml
+    - docker build . -t reg.example.ir/backend-php
+    - docker push reg.example.com/backend-php
+
+deploy:
+  stage: deploy
+  script:
+    - ./bg_deploy.sh
+  only:
+    - master
+
+

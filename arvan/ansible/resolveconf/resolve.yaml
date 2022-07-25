@@ -1,0 +1,21 @@
+---
+- name: example play
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: copy head file for resolv.conf 
+      copy: src=templates/head  dest=/etc/resolv.conf
+
+    - name: Update repositories cache and install "resolvconf" package
+      apt:
+        name: resolvconf
+#        update_cache: yes
+
+    - name: copy head file for resolvconf 
+      copy: src=templates/head  dest=/etc/resolvconf/resolv.conf.d/head
+
+
+  handlers:
+    - name: resolvconf
+      service: 
+        name: resovlconf

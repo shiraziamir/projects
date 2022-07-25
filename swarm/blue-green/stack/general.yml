@@ -1,0 +1,54 @@
+version: "3.4"
+
+services:
+  db:
+    image: reg.example.com/backend-mysql
+    command: --default-authentication-plugin=mysql_native_password --binlog-expire-logs-seconds=263520
+    volumes:
+      - backend-db-data.vol:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    #ports:
+    #  - 3306:3306
+
+    networks:
+      - backend
+      - elk_elk
+    deploy:
+      resources:
+        limits:
+          cpus: '8.0'
+          memory: 32768M
+      placement:
+        constraints:
+          - node.id == p3bkysciugtkv5netrp98h
+
+  redis:
+    image: redis:6
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    networks:
+      - backend
+    ports:
+      - 6379:6379
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2048M
+      placement:
+        constraints:
+          - node.id == p3bkysciugtkv5netrp98h
+
+networks:
+  backend:
+  elk_elk:
+    external: true
+  traefik-public:
+    external: true
+
+volumes:
+  backend-db-data.vol:
+  backend-media.vol:
