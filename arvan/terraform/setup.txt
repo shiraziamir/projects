@@ -1,0 +1,8 @@
+
+https://www.terraform.io/downloads # setup terraform
+
+git clone https://github.com/arvancloud/terraform-provider-arvan.git
+cd terraform-provider-arvan 
+go version > 1.16
+make install
+
