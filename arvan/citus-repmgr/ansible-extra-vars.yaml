@@ -1,0 +1,44 @@
+db_user: user1
+db_password: password123
+db_name: mydb
+ssh_public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC+GwGCkPF+58/4HrHVxsZ2IMv7fEkfyW6bbkjoGn5CU5l3NeI0OHXudxPEQIS3ns/jq71DIPL/i3+I5LfLwFYYPrXROCPJB1RGz//6M0K1FbRC+KLyi1nl6WcqSX6tmfwqCo/UE0wa+NVG0+ESvZW+n1leATT7DH1zIxxQBs9nJFqn6176IfSrBMuudfdkQqhPG5fZgBZ160yttb1yKXvRMvY18cI9cKPbvMiVXca794gVKoebdfNzLUgcz9XRGZvuTUuUi74oatlPCd8Ik3efbZroB7w2aU0As2JJSc4UqWAwn5zQdsYlR+tnMiPoi5ry9DNQaFrubvhZT4QYfl73 centos@master1.novalocal
+ssh_private_key: |
+ -----BEGIN RSA PRIVATE KEY-----
+ MIIEowIBAAKCAQEAvhsBgpDxfufP+B6x1cbGdiDL+3xJH8lum25I6Bp+QlOZdzXi
+ NDh17ncTxECEt57P46u9QyDy/4t/iOS3y8BWGD610TgjyQdURs//+jNCtRW0Qvii
+ 8otZ5elnKkl+rZn8KgqP1BNMGvjVRtPhEr2Vvp9ZXgE0+wx9cyMcUAbPZyRap+te
+ +iH0qwTLrnX3ZEKoTxuX2YAWdetMrbW9cil70TL2NfHCPXCj27zIlV3Gu/eIFSqH
+ m3Xzcy1IHM/V0Rmb7k1LlIu+KGrZTwnfCJN3n22a6Ae8NmlNALNiSUnOFKlgMJ+c
+ 0HbGJUfrZzIj6Iua8vQzUGha7m74WU+EGH5e9wIDAQABAoIBAAjb3VAmTPqq9sgL
+ NiJOJwVuNdM8UXQHwP3BP+iBA403tBkYC7h/QQ+hwOwOTaD455smb6VnLau25nSM
+ o/v8tIZgtbxQL2q4yraaDsWsCdnCbyoHyCAhWkkafVI9JogUeunCoD0zwQIowleQ
+ nBZxez7s0g9NYxin1li9NB6Okq+tr3PYXLKZLOGh0LQaGtbvq50++LDgQqrU5lze
+ cMrJnWKjF1BGHgDH/E3JZjjZjYT0zOuoQFq1VVG4i5s1vm3qMi4uD6DsAfZ02gFe
+ 77jNw+6b6UuMG0wm9+yjpxLK2NK2g9+HOU1SNsQ/uWwKGJQsNlEXRkk/QUKWs5Eu
+ oYtaRqECgYEA335/JJg7FJzVaBxkqmVUuEZobZGT37EjrtTVsYib301kfTiLuyQg
+ CcsKrXSFCj0tGBK9LB2SyWGUyktESpCZnvMWpFwf/VDhi2XDIYNOzHXyR+eqnAbc
+ 1SkiRgW8o/1+CRpJxtFj+VkdK8yuTK4p1+IxB63xYY3GOb+7J9eC/+kCgYEA2cFU
+ CoWfKkGYTx/Us1eSsMDlof6/fWzM4ZjEE9tE1lUpAdg6anB+R27weHznoEmehhnM
+ v6pXLNSVMeThEz5vjPXUF3Z7RT7oUpY2DSz1z9iFOTqWjvridzRP60XnuiNLpbYD
+ SHR34o2Xv3SqrvhDCorYWLBAHEL9DxTI8PW4+98CgYAIBxEmDVnB6cg4jxyGilE6
+ tTy3As2e8Uvo0bhDQjbnFG6RmOBb/nYwI9zkUhUdQwlFnhaxaPaGyTyA76cqTntW
+ HEEp8i0r+iW/zg3uPDsuWOY08vtL02tHNM0IWthlw4stZIZV39uJb0v+8MEp+++A
+ 050TO4o6CM+f72UXj0QjUQKBgBzbZvTCAnbKHJIXyMs/hrwPxB60sNHBUmFvKkTr
+ YPL6dCW/bvZeFA4JYKrG+rceKnjhAGZB/618Oo1TJJS1SHkotsOpOurRTF5tc5pJ
+ ZAX4Tqdn4T3vd4WOlCy8pdngBY1fUo4OiTinxP1lS51GXzQNdGBEcyqLoheWjI6K
+ McqHAoGBALoqDf9AUaMe2Y9D0+qRW9r/Vb8lBoBODJKPqX5ye5l8BjwODX5+DFP3
+ BqKfeupbK1NWhNQrFG7EFCN8Dbwa9s8pMzHZNecd3RUxzsDX5rq014P6JivsiAV8
+ ibAg8xIOByz/tJiPc7EZCgARXhuw7yTNGO3776vI4FXvriJhnVon
+ -----END RSA PRIVATE KEY-----
+with_replica: true
+pghero_user: pghero
+pghero_password: pg123456
+max_connections: 1000
+shard_count: 32
+replication_factor: 2
+tuning_postgres: false
+postgres_master: 18.121.111.164
+postgres_repl: 18.121.109.81
+worker_list:
+  - 18.121.109.181
+  - 18.121.110.109
