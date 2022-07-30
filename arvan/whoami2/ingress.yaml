@@ -1,0 +1,15 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: whoami
+  namespace: playground
+spec:
+  entryPoints:
+    - web
+  routes:
+    - kind: Rule
+      match: PathPrefix(`/test`)
+      priority: 10
+      services:
+        - name: whoami
+          port: 80

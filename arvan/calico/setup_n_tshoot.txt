@@ -1,0 +1,11 @@
+setup:
+https://phoenixnap.com/kb/calico-kubernetes
+
+tshoot:
+
+
+
+https://www.infiniroot.com/blog/1152/kubernetes-cluster-role-issue-upgrade-error-getting-clusterinformation-connection-unauthorized
+
+https://forums.rancher.com/t/canal-calico-rbac-issues-with-kubernetes-upgrade-to-v1-19-6-in-rancher-v2-5-5/19367/2
+ ( kubectl auth reconcile -f /tmp/calico-node-rbac.yaml )
